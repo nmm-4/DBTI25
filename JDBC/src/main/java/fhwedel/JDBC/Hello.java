@@ -9,26 +9,27 @@ public class Hello {
         "jdbc:mariadb://localhost:3306/firma",
         "root", "password")) {
             
-           // create(con);
-
-           // read(con);
-            update(con);
+            var stmt = con.createStatement();
+            var next = stmt.executeQuery("select * from abteilung join personal where personal.abt_nr = abteilung.abt_nr and abteilung.name = \"Verkauf\"");
             
-
+            while (next.next()) {
+                System.out.println(
+                    next.getString("personal.name") + " " + 
+                    next.getString("vorname")
+                ); 
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     static void update(Connection con) throws SQLException {
-       var stmt = con.prepareStatement("select * from gehalt where geh_stufe = ?");
+       var stmt = con.prepareStatement("update gehalt set betrag = betrag * 1.1 where geh_stufe = ?");
        stmt.setString(1, "it1");
-       var query = stmt.executeQuery(); 
-        // TODO
-        if (query.next()) {
-            System.out.println(query.getInt(2));
-        }
+       stmt.executeQuery(); 
     }
+   
     static void create(Connection con) throws SQLException {
             var stmt = con.prepareStatement(
                 "insert into personal(pnr,name,vorname,geh_stufe,abt_nr,krankenkasse) VALUES(?,?,?,?,?,?)"
@@ -48,5 +49,11 @@ public class Hello {
         stmt1.executeQuery("select * from personal;");
     }
 
+    static void delete(Connection con) throws SQLException {
+        var stmt = con.prepareStatement("DELETE FROM personal WHERE vorname = ? and name = ?");
+        stmt.setString(1, "Lutz");
+        stmt.setString(2, "Tietze");
+        stmt.executeQuery();
+    }
 
 }
