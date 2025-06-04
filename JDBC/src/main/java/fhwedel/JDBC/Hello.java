@@ -9,20 +9,13 @@ public class Hello {
         "jdbc:mariadb://localhost:3306/firma",
         "root", "password")) {
             
-            var stmt = con.createStatement();
-            var next = stmt.executeQuery("select * from abteilung join personal where personal.abt_nr = abteilung.abt_nr and abteilung.name = \"Verkauf\"");
-            
-            while (next.next()) {
-                System.out.println(
-                    next.getString("personal.name") + " " + 
-                    next.getString("vorname")
-                ); 
-            }
+      
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     static void update(Connection con) throws SQLException {
        var stmt = con.prepareStatement("update gehalt set betrag = betrag * 1.1 where geh_stufe = ?");
@@ -56,4 +49,15 @@ public class Hello {
         stmt.executeQuery();
     }
 
-}
+    static void get(Connection con) throws SQLException {
+         var stmt = con.createStatement();
+            var next = stmt.executeQuery("select * from abteilung join personal where personal.abt_nr = abteilung.abt_nr and abteilung.name = \"Verkauf\"");
+            
+            while (next.next()) {
+                System.out.println(
+                    next.getString("personal.name") + " " + 
+                    next.getString("vorname")
+                ); 
+            }
+    }
+} 
